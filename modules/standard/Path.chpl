@@ -286,4 +286,56 @@ proc file.realPath(): string throws {
       return false;
     }
   }
+  
+/* Collapse paths such as `foo//bar`, `foo/bar/`, `foo/./bar`, and 
+   `foo/baz/../bar` into `foo/bar`.  Warning: may alter meaning of paths
+   containing symbolic links.  Similar to :proc:`normCase`, on Windows will 
+   replace forward slashes but here it is limited to Unix like environment
+
+   :arg name: a potential path to collapse, possibly destroying the meaning 
+              of the path if symbolic links were included.
+   :type name: `string`
+
+   :return: the collapsed version of `name`
+   :rtype: `string`
+*/
+  proc normPath(name: string): string {
+  var result: string = "";
+  var len: int = name.length;
+  var i: int = 1;
+
+  if(name.endsWith('/')) {
+     len = len - 1;
+   }
+
+   while (i <= len) {
+      if (name[i] == '/' && name[i+1] == '/') {
+        result += name[i];
+        i = i + 1;
+      }
+      else if (name[i] == '.') {
+         if (name[i+1] == '.') {
+         var j: int = result.length - 1;
+         while (result[j] != '/' && j > 1) {
+            j = j - 1;
+         }
+
+         var k: int = 1;
+         var temp: string = "";
+         while (k <= j) {
+           temp += result[k];
+           k = k + 1;
+         }
+          i = i + 2;
+          result = temp;
+          }
+         else 
+           i = i + 1;
+       }
+       else
+         result += name[i];
+     i = i + 1;
+   }
+  return result;
+ } 
 }
