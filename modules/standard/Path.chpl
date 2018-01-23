@@ -300,42 +300,42 @@ proc file.realPath(): string throws {
    :rtype: `string`
 */
   proc normPath(name: string): string {
-  var result: string = "";
-  var len: int = name.length;
-  var i: int = 1;
+    var result: string = "";
+    var len: int = name.length;
+    var i: int = 1;
 
-  if(name.endsWith('/')) {
-     len = len - 1;
-   }
+    if(name.endsWith('/')) {
+      len = len - 1;
+    }
 
-   while (i <= len) {
+    while (i <= len) {
       if (name[i] == '/' && name[i+1] == '/') {
         result += name[i];
         i = i + 1;
       }
       else if (name[i] == '.') {
          if (name[i+1] == '.') {
-         var j: int = result.length - 1;
-         while (result[j] != '/' && j > 1) {
+          var j: int = result.length - 1;
+          while (result[j] != '/' && j > 1) {
             j = j - 1;
-         }
+          }
 
-         var k: int = 1;
-         var temp: string = "";
-         while (k <= j) {
-           temp += result[k];
-           k = k + 1;
-         }
+          var k: int = 1;
+          var temp: string = "";
+          while (k <= j) {
+            temp += result[k];
+            k = k + 1;
+          }
           i = i + 2;
           result = temp;
-          }
-         else 
-           i = i + 1;
-       }
-       else
-         result += name[i];
-     i = i + 1;
-   }
-  return result;
- } 
+        }
+        else 
+          i = i + 1;
+        }
+      else
+        result += name[i];
+      i = i + 1;
+     }
+   return result;
+  } 
 }
